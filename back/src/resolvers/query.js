@@ -5,7 +5,11 @@ const {
 } = process.env;
 
 export const Query = {
-  deployFridayEpisodes() {
+  deployFridayEpisodes(
+    _parent,
+    _args,
+    { dataSources: { additionalEpisodeInfo } }
+  ) {
     return fetch(
       `https://youtube.googleapis.com/youtube/v3/playlistItems?maxResults=100&part=snippet&playlistId=PLn5EpEMtxTCmLsbLgaN3djvEkRdp-YmlE&key=${YOUTUBE_API_KEY}`
     )
@@ -19,26 +23,32 @@ export const Query = {
         return res.json();
       })
       .then(({ items }) =>
-        items.map(
-          ({
-            id,
-            snippet: {
-              resourceId: { videoId },
-              publishedAt,
-              title,
-              description,
-              thumbnails: { high: thumbnail },
-              position,
-            },
-          }) => ({
-            id,
-            videoId,
-            publishedAt,
-            title,
-            description,
-            thumbnail,
-            position,
-          })
+        Promise.all(
+          items.map(
+            ({
+              id,
+              snippet: {
+                resourceId: { videoId },
+                publishedAt,
+                title,
+                description,
+                thumbnails: { high: thumbnail },
+                position,
+              },
+            }) =>
+              additionalEpisodeInfo
+                .getAdditionalEpisodeInfo(id)
+                .then((additionalInfo) => ({
+                  id,
+                  videoId,
+                  publishedAt,
+                  title,
+                  description,
+                  thumbnail,
+                  position,
+                  additionalInfo,
+                }))
+          )
         )
       );
   },

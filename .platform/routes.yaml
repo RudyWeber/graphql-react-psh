@@ -13,4 +13,12 @@
 
 "https://api.{default}/":
     type: upstream
+    id: graphqlEntrypoint
     upstream: "api:http"
+
+"https://api.{default}/graphql":
+    type: upstream
+    id: graphqlSubscriptions
+    upstream: "api:http"
+    cache:
+        enabled: false

@@ -3,3 +3,6 @@
 # Each service listed will be deployed
 # to power your Platform.sh project.
 
+db:
+  type: mongodb:3.6
+  disk: 512

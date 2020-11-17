@@ -20,6 +20,13 @@ hooks:
   build: |
     set -e
     yarn
+  # we do not have access to PLATFORM_RELATIONSHIPS in the build hook
+  # so we have to delay the build so `react-scripts` can do its thing
+  # with the environment variables when bundling the app.
+  deploy: |
+    set -e
+    REACT_APP_PLATFORM_RELATIONSHIPS=$PLATFORM_RELATIONSHIPS \
+    REACT_APP_PLATFORM_ROUTES=$PLATFORM_ROUTES \
     yarn build
 
 # The relationships of the application with services or other applications.
@@ -43,3 +50,11 @@ web:
 
 # The size of the persistent disk of the application (in MB).
 disk: 512
+
+mounts:
+  '/.cache':
+    source: local
+    source_path: cache
+  'build':
+    source: local
+    source_path: public

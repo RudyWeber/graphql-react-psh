@@ -9,6 +9,7 @@ export default gql`
     description: String
     thumbnail: Thumbnail!
     position: Int!
+    additionalInfo: AdditionalInfo
   }
 
   type Thumbnail {
@@ -17,7 +18,22 @@ export default gql`
     height: Int!
   }
 
+  type AdditionalInfo {
+    _id: String,
+    upVotes: Int
+    downVotes: Int
+  }
+
   type Query {
     deployFridayEpisodes: [Episode]! @cacheControl(maxAge: 7200)
+  }
+
+  type Mutation {
+    upVote(id: String!): Boolean
+    downVote(id: String!): Boolean
+  }
+
+  type Subscription {
+    votesUpdated: AdditionalInfo
   }
 `;

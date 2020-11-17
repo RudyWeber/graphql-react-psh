@@ -1,5 +1,3 @@
-'use strict';
-
 class NotValidPlatformError extends Error {}
 
 class BuildTimeVariableAccessError extends Error {}
