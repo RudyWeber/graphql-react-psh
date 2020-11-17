@@ -5,8 +5,12 @@
 
 "https://{default}/":
     type: upstream
-    upstream: "app:http"
+    upstream: "front:http"
 
 "https://www.{default}/":
     type: redirect
     to: "https://{default}/"
+
+"https://api.{default}/":
+    type: upstream
+    upstream: "api:http"
